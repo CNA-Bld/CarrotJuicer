@@ -5,8 +5,8 @@
 #include <string>
 #include <thread>
 #include <windows.h>
-#include "../minhook/include/MinHook.h"
 #include <nlohmann/json.hpp>
+#include <MinHook.h>
 
 using namespace std::literals;
 using json = nlohmann::json;
