@@ -36,9 +36,8 @@ To investigate the content, remove the first 170 bytes and use msgpack tools, li
 ## Build
 
 0. Install [vcpkg](https://vcpkg.io/en/getting-started.html), and make sure to enable VS integration by running `vcpkg integrate install`.
-1. Install the dependencies with vcpkg: `vcpkg install minhook:x64-windows-static nlohmann-json:x64-windows-static`.
-2. `git clone`
-3. Spin up Visual Studio 2019, and press "Build".
+1. `git clone`
+2. Spin up Visual Studio 2019, and press "Build".
 
 ## Credits
 
