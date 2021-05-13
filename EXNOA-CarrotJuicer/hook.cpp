@@ -1,12 +1,15 @@
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <locale>
 #include <string>
 #include <thread>
 #include <windows.h>
 #include "../minhook/include/MinHook.h"
+#include <nlohmann/json.hpp>
 
 using namespace std::literals;
+using json = nlohmann::json;
 
 namespace
 {
@@ -38,9 +41,62 @@ namespace
 	{
 		FILE* fp;
 		fopen_s(&fp, file_name.c_str(), "wb");
-		if (fp != nullptr) {
+		if (fp != nullptr)
+		{
 			fwrite(buffer, 1, len, fp);
 			fclose(fp);
+		}
+	}
+
+	void print_response_additional_info(std::string data)
+	{
+		try
+		{
+			json j;
+			try
+			{
+				j = json::from_msgpack(data);
+			}
+			catch (const json::parse_error &e)
+			{
+				printf("json: parse_error: %s\n", e.what());
+				return;
+			}
+
+			try
+			{
+				auto unchecked_event_array = j.at("data").at("unchecked_event_array");
+				for (auto iter = unchecked_event_array.begin(); iter < unchecked_event_array.end(); ++iter)
+				{
+					auto event = iter.value();
+					std::cout << "event_id = " << event.at("event_id") << "; story_id = " << event.at("story_id") <<
+						std::endl;
+
+					auto choice_array = event.at("event_contents_info").at("choice_array");
+					if (!choice_array.empty())
+					{
+						std::cout << "choices: ";
+						for (auto choice = choice_array.begin(); choice < choice_array.end(); ++choice)
+						{
+							std::cout << choice.value().at("select_index")
+								<< (choice + 1 == choice_array.end() ? "" : ", ");
+						}
+						std::cout << std::endl;
+					}
+				}
+			}
+			catch (const json::out_of_range &e)
+			{
+				// Not a packet that we are interested in, do nothing.
+			}
+			catch (const json::type_error &e)
+			{
+				printf("json: type_error: %s\n", e.what());
+			}
+		}
+		catch (...)
+		{
+			printf("Uncaught exception!\n");
 		}
 	}
 
@@ -58,6 +114,8 @@ namespace
 		auto out_path = std::string("CarrotJuicer\\").append(current_time()).append("R.msgpack");
 		write_file(out_path, dst, ret);
 		printf("wrote response to %s\n", out_path.c_str());
+
+		print_response_additional_info(std::string(dst, ret));
 
 		return ret;
 	}
@@ -93,7 +151,8 @@ namespace
 
 		auto LZ4_decompress_safe_ext_ptr = GetProcAddress(libnative_module, "LZ4_decompress_safe_ext");
 		printf("LZ4_decompress_safe_ext at %p\n", LZ4_decompress_safe_ext_ptr);
-		if (LZ4_decompress_safe_ext_ptr == nullptr) {
+		if (LZ4_decompress_safe_ext_ptr == nullptr)
+		{
 			return;
 		}
 		MH_CreateHook(LZ4_decompress_safe_ext_ptr, LZ4_decompress_safe_ext_hook, &LZ4_decompress_safe_ext_orig);
@@ -101,7 +160,8 @@ namespace
 
 		auto LZ4_compress_default_ext_ptr = GetProcAddress(libnative_module, "LZ4_compress_default_ext");
 		printf("LZ4_compress_default_ext at %p\n", LZ4_compress_default_ext_ptr);
-		if (LZ4_compress_default_ext_ptr == nullptr) {
+		if (LZ4_compress_default_ext_ptr == nullptr)
+		{
 			return;
 		}
 		MH_CreateHook(LZ4_compress_default_ext_ptr, LZ4_compress_default_ext_hook, &LZ4_compress_default_ext_orig);
