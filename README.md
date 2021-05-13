@@ -8,6 +8,8 @@ For Android, refer to [Riru-CarrotJuicer](https://github.com/CNA-Bld/Riru-Carrot
 
 Theoretically this should support "modern" versions of Windows, as long as it is x64. But this is only tested with Windows 10 v2004.
 
+If the precompiled binary from Releases page does not work, try build it yourself. I have seen at least 2 machines where it works only when building locally. I have no idea why, probably the VS build process (or even installing VS?) changes some state in the system.
+
 1. Copy `version.dll` to the same directory with `umamusume.exe`. This should be `%USERPROFILE%\Umamusume` unless you did some magic yourself.
 2. Start the game as usual (i.e., with DMM launcher). The captured packets will be saved into `CarrotJuicer` folder in the game directory.
 3. You can investigate the responses with msgpack tools like `msgpack2json -di 123456789R.msgpack`.
@@ -33,8 +35,9 @@ To investigate the content, remove the first 170 bytes and use msgpack tools, li
 
 ## Build
 
-1. `git clone`
-2. `git submodule update --init` 
+0. Install [vcpkg](https://vcpkg.io/en/getting-started.html), and make sure to enable VS integration by running `vcpkg integrate install`.
+1. Install the dependencies with vcpkg: `vcpkg install minhook:x64-windows-static nlohmann-json:x64-windows-static`.
+2. `git clone`
 3. Spin up Visual Studio 2019, and press "Build".
 
 ## Credits
