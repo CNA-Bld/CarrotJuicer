@@ -23,10 +23,10 @@ namespace
 		freopen_s(&_, "CONOUT$", "w", stderr);
 		freopen_s(&_, "CONIN$", "r", stdin);
 
-		SetConsoleTitle("Umapyoi");
+		SetConsoleTitle(L"Umapyoi");
 
 		// set this to avoid turn japanese texts into question mark
-		SetConsoleOutputCP(65001);
+		SetConsoleOutputCP(CP_UTF8);
 		std::locale::global(std::locale(""));
 	}
 
@@ -155,7 +155,7 @@ namespace
 	{
 		std::filesystem::create_directory("CarrotJuicer");
 
-		auto libnative_module = GetModuleHandle("libnative.dll");
+		auto libnative_module = GetModuleHandle(L"libnative.dll");
 		printf("libnative.dll at %p\n", libnative_module);
 		if (libnative_module == nullptr)
 		{

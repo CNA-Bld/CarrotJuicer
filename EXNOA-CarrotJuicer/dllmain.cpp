@@ -12,10 +12,10 @@ BOOL APIENTRY DllMain(HMODULE hModule,
                       LPVOID lpReserved
 )
 {
-	char buffer[MAX_PATH];
-	std::filesystem::path module_path(std::string(buffer, GetModuleFileName(nullptr, buffer, MAX_PATH)));
+	WCHAR buffer[MAX_PATH];
+	std::filesystem::path module_path(std::wstring(buffer, GetModuleFileName(nullptr, buffer, MAX_PATH)));
 
-	if (module_path.filename() == "umamusume.exe")
+	if (module_path.filename() == L"umamusume.exe")
 	{
 		current_path(module_path.parent_path());
 

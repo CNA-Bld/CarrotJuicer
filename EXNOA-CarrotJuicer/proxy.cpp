@@ -29,10 +29,10 @@ namespace
 	public:
 		version_init()
 		{
-			char buffer[MAX_PATH];
+			WCHAR buffer[MAX_PATH];
 			int len = GetSystemDirectory(buffer, MAX_PATH);
-			std::string real_dll_path(buffer, len);
-			real_dll_path += "\\version.dll";
+			std::wstring real_dll_path(buffer, len);
+			real_dll_path += L"\\version.dll";
 
 			auto original_dll = LoadLibrary(real_dll_path.data());
 
