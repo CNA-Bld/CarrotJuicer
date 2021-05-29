@@ -3,7 +3,8 @@
   "name": "exnoa-carrotjuicer",
   "version": "1.0.0",
   "dependencies": [
+    "minhook",
     "nlohmann-json",
-    "minhook"
+    "sqlitecpp"
   ]
 }

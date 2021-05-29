@@ -16,6 +16,12 @@
     <Filter Include="Source Files\proxy">
       <UniqueIdentifier>{2f5f8047-7176-46ab-81fc-cf3c60564a20}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\responses">
+      <UniqueIdentifier>{8276e9c8-5ecb-4d9c-8e31-d17d0547bd59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\mdb">
+      <UniqueIdentifier>{8edc471f-c022-4458-ba08-2c6d6a565cae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -26,6 +32,12 @@
     </ClCompile>
     <ClCompile Include="hook.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="responses.cpp">
+      <Filter>Source Files\responses</Filter>
+    </ClCompile>
+    <ClCompile Include="mdb.cpp">
+      <Filter>Source Files\mdb</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -41,6 +53,12 @@
   <ItemGroup>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="responses.hpp">
+      <Filter>Source Files\responses</Filter>
+    </ClInclude>
+    <ClInclude Include="mdb.hpp">
+      <Filter>Source Files\mdb</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

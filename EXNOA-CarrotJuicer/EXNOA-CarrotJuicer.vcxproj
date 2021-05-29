@@ -50,6 +50,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -62,7 +63,9 @@
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="hook.cpp" />
+    <ClCompile Include="mdb.cpp" />
     <ClCompile Include="proxy.cpp" />
+    <ClCompile Include="responses.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="version.def" />
@@ -71,7 +74,9 @@
     <MASM Include="version.asm" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="mdb.hpp" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="responses.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="EXNOA-CarrotJuicer.rc" />
