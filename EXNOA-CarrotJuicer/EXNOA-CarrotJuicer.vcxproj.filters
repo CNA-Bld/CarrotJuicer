@@ -22,6 +22,9 @@
     <Filter Include="Source Files\mdb">
       <UniqueIdentifier>{8edc471f-c022-4458-ba08-2c6d6a565cae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\edb">
+      <UniqueIdentifier>{df75324a-8a5f-48b2-85f7-3cd89243ef4c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -38,6 +41,9 @@
     </ClCompile>
     <ClCompile Include="mdb.cpp">
       <Filter>Source Files\mdb</Filter>
+    </ClCompile>
+    <ClCompile Include="edb.cpp">
+      <Filter>Source Files\edb</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +65,9 @@
     </ClInclude>
     <ClInclude Include="mdb.hpp">
       <Filter>Source Files\mdb</Filter>
+    </ClInclude>
+    <ClInclude Include="edb.hpp">
+      <Filter>Source Files\edb</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

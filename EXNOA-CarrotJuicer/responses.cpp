@@ -2,6 +2,7 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include "mdb.hpp"
+#include "edb.hpp"
 
 using namespace std::literals;
 using json = nlohmann::json;
@@ -10,7 +11,9 @@ namespace responses
 {
 	void print_event_data(nlohmann::basic_json<> e)
 	{
-		std::cout << "event_id = " << e.at("event_id") << "; story_id = " << e.at("story_id") << std::endl;
+		int story_id = e.at("story_id").get<int>();
+
+		std::cout << "event_id = " << e.at("event_id") << "; story_id = " << story_id << std::endl;
 
 		auto story_name = mdb::find_text(181, e.at("story_id"));
 		if (!story_name.empty())
@@ -21,6 +24,8 @@ namespace responses
 		auto choice_array = e.at("event_contents_info").at("choice_array");
 		if (!choice_array.empty())
 		{
+			edb::print_choices(story_id);
+
 			std::cout << "choices: ";
 			for (auto choice = choice_array.begin(); choice < choice_array.end(); ++choice)
 			{

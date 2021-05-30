@@ -4,6 +4,8 @@
 #include <thread>
 #include <windows.h>
 #include <MinHook.h>
+
+#include "edb.hpp"
 #include "responses.hpp"
 #include "mdb.hpp"
 
@@ -151,6 +153,7 @@ void attach()
 	MH_EnableHook(LoadLibraryW);
 
 	std::thread(mdb::init).detach();
+	std::thread(edb::init).detach();
 }
 
 void detach()
