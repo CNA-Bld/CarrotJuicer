@@ -1,12 +1,14 @@
 # EXNOA-CarrotJuicer
 
-Hooks the decryption function in `libnative.dll` of ウマ娘プリティーダービー (Umamusume Pretty Derby), to allow inspecting the packets.
+Hooks the decryption function in `libnative.dll` of ウマ娘プリティーダービー (Umamusume Pretty Derby), to allow inspecting the packets (and provide some useful information during the game).
 
 For Android, refer to [Riru-CarrotJuicer](https://github.com/CNA-Bld/Riru-CarrotJuicer).
 
 ## Usage
 
 Theoretically this should support "modern" versions of Windows, as long as it is x64. But this is only tested with Windows 10 v2004.
+
+Please make sure that you have installed the latest Visual C++ 2019 Redistributable, otherwise the game would crash at start up time with no message at all.
 
 If the precompiled binary from Releases page does not work, try build it yourself. I have seen at least 2 machines where it works only when building locally. I have no idea why, probably the VS build process (or even installing VS?) changes some state in the system.
 
@@ -15,6 +17,14 @@ If the precompiled binary from Releases page does not work, try build it yoursel
 3. You can investigate the responses with msgpack tools like `msgpack2json -di 123456789R.msgpack`.
 
 [Hakuraku](https://github.com/SSHZ-ORG/hakuraku) has a UI for investigating the captured packets [here](https://hakuraku.sshz.org/#/carrotjuicer).
+
+### `cjedb.json` and `master.mdb`
+
+Starting from v1.2, EXNOA-CarrotJuicer would print extra info that may help users to make strategic decisions. Some features depend on an optional external data file `cjedb.json`. If this file is missing, some features will be disabled.
+
+The Releases in this repo would bundle the latest file as of that time, but you may wish to check for updates [here](https://github.com/CNA-Bld/cjedb) from time to time, especially after a new charactor or support card is added.
+
+In addition, EXNOA-CarrotJuicer will attempt to read `master.mdb` directly from the game's data directory (in `%USERPROFILE%\AppData\LocalLow\Cygames\umamusume\master`) with a bundled SQLite engine. (Sorry for the bloating file size, but the game itself takes 4GB anyway, so we are as trivial as some rounding error.) If you somehow moved it, please at least make sure a link is available.
 
 ### `race_scenario`
 
