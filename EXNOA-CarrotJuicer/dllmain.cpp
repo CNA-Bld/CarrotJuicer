@@ -2,6 +2,8 @@
 #include <cstdio>
 #include <locale>
 #include <filesystem>
+#include <thread>
+
 #include "Windows.h"
 
 extern void attach();
@@ -20,7 +22,7 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 		current_path(module_path.parent_path());
 
 		if (ul_reason_for_call == DLL_PROCESS_ATTACH)
-			attach();
+			std::thread(attach).detach();
 
 		if (ul_reason_for_call == DLL_PROCESS_DETACH)
 			detach();
