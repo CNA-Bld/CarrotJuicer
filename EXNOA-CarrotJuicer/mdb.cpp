@@ -21,6 +21,11 @@ namespace mdb
 	{
 		try
 		{
+			if (master != nullptr)
+			{
+				return;
+			}
+
 			WCHAR buffer[MAX_PATH];
 			int len = GetEnvironmentVariable(L"USERPROFILE", buffer, MAX_PATH);
 
@@ -33,6 +38,24 @@ namespace mdb
 		catch (std::exception& e)
 		{
 			std::cout << "Exception opening master.mdb: " << e.what() << std::endl;
+		}
+	}
+
+	void unload()
+	{
+		try
+		{
+			if (master == nullptr)
+			{
+				return;
+			}
+
+			delete master;
+			master = nullptr;
+		}
+		catch (std::exception& e)
+		{
+			std::cout << "Exception unloading master.mdb: " << e.what() << std::endl;
 		}
 	}
 

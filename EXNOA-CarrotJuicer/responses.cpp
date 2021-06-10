@@ -54,7 +54,20 @@ namespace responses
 			try
 			{
 				auto data = j.at("data");
-				if (data.contains("unchecked_event_array"))
+				if (data.contains("attest") && data.contains("nonce") && data.contains("terms_updated") &&
+					data.contains("is_tutorial") && data.contains("resource_version"))
+				{
+					// tool/start_session, close master.mdb in case the game wants to update it
+					std::cout << "Received tool/start_session, unloading master.mdb." << std::endl;
+					mdb::unload();
+				}
+				else if (data.contains("common_define") && data.contains("res_version"))
+				{
+					// load/index, open master.mdb
+					std::cout << "Received load/index, loading master.mdb." << std::endl;
+					mdb::init();
+				}
+				else if (data.contains("unchecked_event_array"))
 				{
 					// In single mode.
 					auto unchecked_event_array = data.at("unchecked_event_array");

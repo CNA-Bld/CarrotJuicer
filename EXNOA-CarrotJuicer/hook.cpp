@@ -152,7 +152,6 @@ void attach()
 	MH_CreateHook(LoadLibraryW, load_library_w_hook, &load_library_w_orig);
 	MH_EnableHook(LoadLibraryW);
 
-	std::thread(mdb::init).detach();
 	std::thread(edb::init).detach();
 }
 
