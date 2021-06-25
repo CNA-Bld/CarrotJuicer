@@ -1,4 +1,5 @@
-#include <cstdio>
+﻿#include <cstdio>
+#include <iomanip>
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include "mdb.hpp"
@@ -81,6 +82,83 @@ namespace responses
 		}
 	}
 
+	const std::map<int, std::string> distance_type_labels = {
+		{1, u8"芝短"}, {2, u8"芝マ"}, {3, u8"芝中"}, {4, u8"芝長"}, {5, u8"ダマ"}
+	};
+	const std::map<int, std::string> distance_type_proper_fields = {
+		{1, "proper_distance_short"},
+		{2, "proper_distance_mile"},
+		{3, "proper_distance_middle"},
+		{4, "proper_distance_long"},
+		{5, "proper_distance_mile"},
+	};
+
+	const std::map<int, std::string> running_style_labels = {{1, u8"逃"}, {2, u8"先"}, {3, u8"差"}, {4, u8"追"}};
+	const std::map<int, std::string> running_style_proper_fields = {
+		{1, "proper_running_style_nige"},
+		{2, "proper_running_style_senko"},
+		{3, "proper_running_style_sashi"},
+		{4, "proper_running_style_oikomi"},
+	};
+
+	const std::map<int, std::string> proper_labels = {
+		{1, "G"}, {2, "F"}, {3, "E"}, {4, "D"}, {5, "C"}, {6, "B"}, {7, "A"}, {8, "S"},
+	};
+
+	const std::vector<std::pair<std::string, std::string>> status_data_fields = {
+		{u8"スピ", "speed"}, {u8"スタ", "stamina"}, {u8"パワ", "power"}, {u8"根性", "guts"}, {u8"賢さ", "wiz"},
+		{u8"評価", "rank_score"},
+	};
+
+	void print_team_stadium_opponent_info(nlohmann::basic_json<>& o)
+	{
+		std::cout << "evaluation_point = " << o.at("evaluation_point") << '\n';
+
+		auto& team_data_array = o.at("team_data_array");
+
+		std::map<int, json> trained_chara_map;
+		std::vector<json> trained_chara_array;
+		for (auto& trained_chara : o.at("trained_chara_array"))
+		{
+			trained_chara_map[trained_chara.at("trained_chara_id")] = trained_chara;
+		}
+
+		std::cout << "    |";
+		for (auto& team_data : team_data_array)
+		{
+			std::cout << distance_type_labels.at(team_data.at("distance_type"))
+				<< running_style_labels.at(team_data.at("running_style"))
+				<< "|";
+			trained_chara_array.push_back(trained_chara_map.at(team_data.at("trained_chara_id")));
+		}
+		std::cout << '\n';
+
+		std::cout << "    |";
+		for (int i = 0; i < team_data_array.size(); ++i)
+		{
+			auto& team_data = team_data_array[i];
+			auto& chara = trained_chara_array[i];
+			int distance_type = team_data.at("distance_type");
+			std::cout
+				<< " " << proper_labels.at(chara.at((distance_type < 5) ? "proper_ground_turf" : "proper_ground_dirt"))
+				<< " " << proper_labels.at(chara.at(distance_type_proper_fields.at(distance_type)))
+				<< " " << proper_labels.at(chara.at(running_style_proper_fields.at(team_data.at("running_style"))))
+				<< "|";
+		}
+		std::cout << '\n';
+
+		for (auto& field : status_data_fields)
+		{
+			std::cout << field.first << "|";
+			for (auto& chara : trained_chara_array)
+			{
+				std::cout << std::setw(6) << static_cast<int>(chara.at(field.second)) << "|";
+			}
+			std::cout << '\n';
+		}
+		std::cout << '\n';
+	}
+
 	void print_response_additional_info(const std::string* data)
 	{
 		try
@@ -125,6 +203,15 @@ namespace responses
 				{
 					// In gallery/play_event.
 					print_event_data(data);
+				}
+				else if (data.contains("opponent_info_array"))
+				{
+					// team_stadium/opponent_list
+					auto& opponent_info_array = j.at("data").at("opponent_info_array");
+					for (auto& o : opponent_info_array)
+					{
+						print_team_stadium_opponent_info(o);
+					}
 				}
 			}
 			catch (const json::out_of_range& e)
