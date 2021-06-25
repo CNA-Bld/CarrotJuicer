@@ -64,7 +64,8 @@ namespace
 		write_file(out_path, dst, ret);
 		printf("wrote response to %s\n", out_path.c_str());
 
-		responses::print_response_additional_info(std::string(dst, ret));
+		std::string data(dst, ret);
+		responses::print_response_additional_info(&data);
 
 		return ret;
 	}

@@ -9,6 +9,51 @@ using json = nlohmann::json;
 
 namespace responses
 {
+	std::string opponent_list_sig =
+		"\x81\xB3\x6F\x70\x70\x6F\x6E\x65\x6E\x74\x5F\x69\x6E\x66\x6F\x5F\x61\x72\x72\x61\x79\x93";
+	std::string opponent_list_opponent_info_header = "\x88\xC0\x01";
+	std::string opponent_list_opponent_info_header_fixed = "\x87";
+
+	json try_parse_msgpack(const std::string* data)
+	{
+		try
+		{
+			return json::from_msgpack(*data);
+		}
+		catch (const json::parse_error& e)
+		{
+			if (e.id == 113)
+			{
+				// Try to fix team_stadium/opponent_list
+				auto idx = data->find(opponent_list_sig);
+				if (idx == std::string::npos)
+				{
+					throw;
+				}
+
+				std::string fixed = *data;
+				int cnt = 0;
+				while (true)
+				{
+					idx = fixed.find(opponent_list_opponent_info_header, idx);
+					if (idx == std::string::npos) break;
+					fixed.replace(idx, opponent_list_opponent_info_header.length(),
+					              opponent_list_opponent_info_header_fixed);
+					idx += opponent_list_opponent_info_header_fixed.length();
+					cnt += 1;
+				}
+				if (cnt != 3)
+				{
+					throw;
+				}
+
+				return json::from_msgpack(fixed);
+			}
+
+			throw;
+		}
+	}
+
 	void print_event_data(nlohmann::basic_json<> e)
 	{
 		int story_id = e.at("story_id").get<int>();
@@ -36,14 +81,14 @@ namespace responses
 		}
 	}
 
-	void print_response_additional_info(std::string data)
+	void print_response_additional_info(const std::string* data)
 	{
 		try
 		{
 			json j;
 			try
 			{
-				j = json::from_msgpack(data);
+				j = try_parse_msgpack(data);
 			}
 			catch (const json::parse_error& e)
 			{
