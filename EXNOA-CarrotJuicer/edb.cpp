@@ -42,14 +42,13 @@ namespace edb
 	{
 		try
 		{
-			auto search = events_map.find(story_id);
-			if (search != events_map.end())
+			if (auto search = events_map.find(story_id); search != events_map.end())
 			{
-				auto choice_array = search->second.at("choices");
-				for (auto choice = choice_array.begin(); choice < choice_array.end(); ++choice)
+				auto& choice_array = search->second.at("choices");
+				for (auto& choice : choice_array)
 				{
-					std::cout << std::endl << choice.value().at("title").get<std::string>() << std::endl
-						<< choice.value().at("text").get<std::string>() << std::endl;
+					std::cout << std::endl << choice.at("title").get<std::string>() << std::endl
+						<< choice.at("text").get<std::string>() << std::endl;
 				}
 				std::cout << std::endl;
 			}

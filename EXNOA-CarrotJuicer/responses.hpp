@@ -3,5 +3,5 @@
 
 namespace responses
 {
-	void print_response_additional_info(const std::string* data);
+	void print_response_additional_info(const std::string& data);
 }

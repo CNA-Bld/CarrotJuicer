@@ -15,24 +15,24 @@ namespace responses
 	std::string opponent_list_opponent_info_header = "\x88\xC0\x01";
 	std::string opponent_list_opponent_info_header_fixed = "\x87";
 
-	json try_parse_msgpack(const std::string* data)
+	json try_parse_msgpack(const std::string& data)
 	{
 		try
 		{
-			return json::from_msgpack(*data);
+			return json::from_msgpack(data);
 		}
 		catch (const json::parse_error& e)
 		{
 			if (e.id == 113)
 			{
 				// Try to fix team_stadium/opponent_list
-				auto idx = data->find(opponent_list_sig);
+				auto idx = data.find(opponent_list_sig);
 				if (idx == std::string::npos)
 				{
 					throw;
 				}
 
-				std::string fixed = *data;
+				std::string fixed = data;
 				int cnt = 0;
 				while (true)
 				{
@@ -55,20 +55,18 @@ namespace responses
 		}
 	}
 
-	void print_event_data(nlohmann::basic_json<> e)
+	void print_event_data(nlohmann::basic_json<>& e)
 	{
 		int story_id = e.at("story_id").get<int>();
 
 		std::cout << "event_id = " << e.at("event_id") << "; story_id = " << story_id << std::endl;
 
-		auto story_name = mdb::find_text(181, e.at("story_id"));
-		if (!story_name.empty())
+		if (auto story_name = mdb::find_text(181, e.at("story_id")); !story_name.empty())
 		{
 			std::cout << story_name << std::endl;
 		}
 
-		auto choice_array = e.at("event_contents_info").at("choice_array");
-		if (!choice_array.empty())
+		if (auto& choice_array = e.at("event_contents_info").at("choice_array"); !choice_array.empty())
 		{
 			edb::print_choices(story_id);
 
@@ -159,7 +157,7 @@ namespace responses
 		std::cout << '\n';
 	}
 
-	void print_response_additional_info(const std::string* data)
+	void print_response_additional_info(const std::string& data)
 	{
 		try
 		{
@@ -176,7 +174,7 @@ namespace responses
 
 			try
 			{
-				auto data = j.at("data");
+				auto& data = j.at("data");
 				if (data.contains("attest") && data.contains("nonce") && data.contains("terms_updated") &&
 					data.contains("is_tutorial") && data.contains("resource_version"))
 				{
@@ -193,10 +191,10 @@ namespace responses
 				else if (data.contains("unchecked_event_array"))
 				{
 					// In single mode.
-					auto unchecked_event_array = data.at("unchecked_event_array");
-					for (auto iter = unchecked_event_array.begin(); iter < unchecked_event_array.end(); ++iter)
+					auto& unchecked_event_array = data.at("unchecked_event_array");
+					for (auto& e : unchecked_event_array)
 					{
-						print_event_data(iter.value());
+						print_event_data(e);
 					}
 				}
 				else if (data.contains("event_contents_info"))

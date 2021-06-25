@@ -65,7 +65,7 @@ namespace
 		printf("wrote response to %s\n", out_path.c_str());
 
 		std::string data(dst, ret);
-		responses::print_response_additional_info(&data);
+		responses::print_response_additional_info(data);
 
 		return ret;
 	}
