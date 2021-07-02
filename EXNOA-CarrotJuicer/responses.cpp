@@ -91,7 +91,9 @@ namespace responses
 		{5, "proper_distance_mile"},
 	};
 
-	const std::map<int, std::string> running_style_labels = {{1, u8"逃"}, {2, u8"先"}, {3, u8"差"}, {4, u8"追"}};
+	const std::map<int, std::string> running_style_labels = {
+		{0, u8"　"}, {1, u8"逃"}, {2, u8"先"}, {3, u8"差"}, {4, u8"追"}
+	};
 	const std::map<int, std::string> running_style_proper_fields = {
 		{1, "proper_running_style_nige"},
 		{2, "proper_running_style_senko"},
@@ -110,49 +112,85 @@ namespace responses
 
 	void print_team_stadium_opponent_info(nlohmann::basic_json<>& o)
 	{
+		const auto endl = "|\n";
+
 		std::cout << "evaluation_point = " << o.at("evaluation_point") << '\n';
 
 		auto& team_data_array = o.at("team_data_array");
 
 		std::map<int, json> trained_chara_map;
 		std::vector<json> trained_chara_array;
+
 		for (auto& trained_chara : o.at("trained_chara_array"))
 		{
-			trained_chara_map[trained_chara.at("trained_chara_id")] = trained_chara;
+			if (int trained_chara_id = trained_chara.at("trained_chara_id"); trained_chara_id != 0)
+			{
+				trained_chara_map[trained_chara_id] = trained_chara;
+			}
 		}
 
-		std::cout << "    |";
+		std::vector<std::string> separators;
+		int last_distance_type = 0;
+
+		std::cout << "    ";
 		for (auto& team_data : team_data_array)
 		{
-			std::cout << distance_type_labels.at(team_data.at("distance_type"))
-				<< running_style_labels.at(team_data.at("running_style"))
-				<< "|";
-			trained_chara_array.push_back(trained_chara_map.at(team_data.at("trained_chara_id")));
-		}
-		std::cout << '\n';
+			int distance_type = team_data.at("distance_type");
+			std::string separator = distance_type == last_distance_type ? "|" : "| ";
+			separators.push_back(separator);
+			last_distance_type = distance_type;
 
-		std::cout << "    |";
+			std::cout << separator << distance_type_labels.at(distance_type)
+				<< running_style_labels.at(team_data.at("running_style"));
+
+			if (const int trained_chara_id = team_data.at("trained_chara_id"); trained_chara_id != 0)
+			{
+				trained_chara_array.push_back(trained_chara_map.at(team_data.at("trained_chara_id")));
+			}
+			else
+			{
+				trained_chara_array.push_back(nullptr);
+			}
+		}
+		std::cout << endl;
+
+		std::cout << "    ";
 		for (int i = 0; i < team_data_array.size(); ++i)
 		{
+			std::cout << separators[i];
 			auto& team_data = team_data_array[i];
-			auto& chara = trained_chara_array[i];
-			int distance_type = team_data.at("distance_type");
-			std::cout
-				<< " " << proper_labels.at(chara.at((distance_type < 5) ? "proper_ground_turf" : "proper_ground_dirt"))
-				<< " " << proper_labels.at(chara.at(distance_type_proper_fields.at(distance_type)))
-				<< " " << proper_labels.at(chara.at(running_style_proper_fields.at(team_data.at("running_style"))))
-				<< "|";
-		}
-		std::cout << '\n';
-
-		for (auto& field : status_data_fields)
-		{
-			std::cout << field.first << "|";
-			for (auto& chara : trained_chara_array)
+			if (auto& chara = trained_chara_array[i]; chara == nullptr)
 			{
-				std::cout << std::setw(6) << static_cast<int>(chara.at(field.second)) << "|";
+				std::cout << "      ";
 			}
-			std::cout << '\n';
+			else
+			{
+				int distance_type = team_data.at("distance_type");
+				std::cout
+					<< " " << proper_labels.at(
+						chara.at((distance_type < 5) ? "proper_ground_turf" : "proper_ground_dirt"))
+					<< " " << proper_labels.at(chara.at(distance_type_proper_fields.at(distance_type)))
+					<< " " << proper_labels.at(chara.at(running_style_proper_fields.at(team_data.at("running_style"))));
+			}
+		}
+		std::cout << endl;
+
+		for (const auto& [label, field] : status_data_fields)
+		{
+			std::cout << label;
+			for (int i = 0; i < team_data_array.size(); ++i)
+			{
+				std::cout << separators[i];
+				if (auto& chara = trained_chara_array[i]; chara == nullptr)
+				{
+					std::cout << "      ";
+				}
+				else
+				{
+					std::cout << std::setw(6) << static_cast<int>(chara.at(field));
+				}
+			}
+			std::cout << endl;
 		}
 		std::cout << '\n';
 	}
