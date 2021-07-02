@@ -212,6 +212,10 @@ namespace responses
 
 			try
 			{
+				if (!j.contains("data"))
+				{
+					return;
+				}
 				auto& data = j.at("data");
 				if (data.contains("attest") && data.contains("nonce") && data.contains("terms_updated") &&
 					data.contains("is_tutorial") && data.contains("resource_version"))
@@ -252,7 +256,7 @@ namespace responses
 			}
 			catch (const json::out_of_range& e)
 			{
-				// Not a packet that we are interested in, do nothing.
+				printf("json: out_of_range: %s\n", e.what());
 			}
 			catch (const json::type_error& e)
 			{
