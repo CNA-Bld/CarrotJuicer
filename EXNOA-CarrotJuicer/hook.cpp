@@ -5,9 +5,10 @@
 #include <windows.h>
 #include <MinHook.h>
 
+#include "config.hpp"
 #include "edb.hpp"
 #include "responses.hpp"
-#include "mdb.hpp"
+#include "notifier.hpp"
 
 using namespace std::literals;
 
@@ -60,12 +61,23 @@ namespace
 		int ret = reinterpret_cast<decltype(LZ4_decompress_safe_ext_hook)*>(LZ4_decompress_safe_ext_orig)(
 			src, dst, compressedSize, dstCapacity);
 
-		auto out_path = std::string("CarrotJuicer\\").append(current_time()).append("R.msgpack");
-		write_file(out_path, dst, ret);
-		printf("wrote response to %s\n", out_path.c_str());
+		if (config::get().save_response)
+		{
+			auto out_path = std::string("CarrotJuicer\\").append(current_time()).append("R.msgpack");
+			write_file(out_path, dst, ret);
+			printf("wrote response to %s\n", out_path.c_str());
+		}
 
 		std::string data(dst, ret);
+
+		auto notifier_thread = std::thread([&]
+		{
+			notifier::notify_response(data);
+		});
+
 		responses::print_response_additional_info(data);
+
+		notifier_thread.join();
 
 		return ret;
 	}
@@ -81,9 +93,12 @@ namespace
 		int ret = reinterpret_cast<decltype(LZ4_compress_default_ext_hook)*>(LZ4_compress_default_ext_orig)(
 			src, dst, srcSize, dstCapacity);
 
-		auto out_path = std::string("CarrotJuicer\\").append(current_time()).append("Q.msgpack");
-		write_file(out_path, src, srcSize);
-		printf("wrote request to %s\n", out_path.c_str());
+		if (config::get().save_request)
+		{
+			auto out_path = std::string("CarrotJuicer\\").append(current_time()).append("Q.msgpack");
+			write_file(out_path, src, srcSize);
+			printf("wrote request to %s\n", out_path.c_str());
+		}
 
 		return ret;
 	}
@@ -153,7 +168,10 @@ void attach()
 	MH_CreateHook(LoadLibraryW, load_library_w_hook, &load_library_w_orig);
 	MH_EnableHook(LoadLibraryW);
 
+	config::load();
+
 	std::thread(edb::init).detach();
+	std::thread(notifier::init).detach();
 }
 
 void detach()

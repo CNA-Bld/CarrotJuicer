@@ -3,6 +3,7 @@
   "name": "exnoa-carrotjuicer",
   "version": "1.0.0",
   "dependencies": [
+    "cpp-httplib",
     "minhook",
     "nlohmann-json",
     "sqlitecpp"

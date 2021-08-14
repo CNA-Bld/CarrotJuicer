@@ -25,6 +25,12 @@
     <Filter Include="Source Files\edb">
       <UniqueIdentifier>{df75324a-8a5f-48b2-85f7-3cd89243ef4c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\notifier">
+      <UniqueIdentifier>{d41b2f6f-64a2-45f3-8224-501fc6bc4f9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\config">
+      <UniqueIdentifier>{b99a1577-4528-43fc-b48b-15daf6ad1737}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -44,6 +50,12 @@
     </ClCompile>
     <ClCompile Include="edb.cpp">
       <Filter>Source Files\edb</Filter>
+    </ClCompile>
+    <ClCompile Include="notifier.cpp">
+      <Filter>Source Files\notifier</Filter>
+    </ClCompile>
+    <ClCompile Include="config.cpp">
+      <Filter>Source Files\config</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -68,6 +80,12 @@
     </ClInclude>
     <ClInclude Include="edb.hpp">
       <Filter>Source Files\edb</Filter>
+    </ClInclude>
+    <ClInclude Include="notifier.hpp">
+      <Filter>Source Files\notifier</Filter>
+    </ClInclude>
+    <ClInclude Include="config.hpp">
+      <Filter>Source Files\config</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

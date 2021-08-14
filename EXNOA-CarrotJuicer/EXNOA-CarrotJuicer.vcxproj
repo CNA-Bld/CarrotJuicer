@@ -61,10 +61,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="config.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="edb.cpp" />
     <ClCompile Include="hook.cpp" />
     <ClCompile Include="mdb.cpp" />
+    <ClCompile Include="notifier.cpp" />
     <ClCompile Include="proxy.cpp" />
     <ClCompile Include="responses.cpp" />
   </ItemGroup>
@@ -75,8 +77,10 @@
     <MASM Include="version.asm" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="config.hpp" />
     <ClInclude Include="edb.hpp" />
     <ClInclude Include="mdb.hpp" />
+    <ClInclude Include="notifier.hpp" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="responses.hpp" />
   </ItemGroup>
