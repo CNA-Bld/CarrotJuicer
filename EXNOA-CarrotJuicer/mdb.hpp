@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <string>
 
 namespace mdb
@@ -7,4 +7,6 @@ namespace mdb
 	void unload();
 
 	std::string find_text(int category, int index);
+	std::pair<std::string, std::string>& get_chara_names(int chara_id);
+	std::string get_formatted_chara_proper_labels(int chara_id); // format: " A B |  C D E F", 芝ダ短マ中長
 }

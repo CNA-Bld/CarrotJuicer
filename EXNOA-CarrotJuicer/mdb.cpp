@@ -1,5 +1,6 @@
-#include <codecvt>
+﻿#include <codecvt>
 #include <iostream>
+#include <vector>
 #include <Windows.h>
 #include <SQLiteCpp/SQLiteCpp.h>
 
@@ -84,5 +85,72 @@ namespace mdb
 			std::cout << "Exception querying master.mdb: " << e.what() << std::endl;
 		}
 		return "";
+	}
+
+
+	std::map<int, std::pair<std::string, std::string>> chara_names;
+	std::pair<std::string, std::string> UNKNOWN_CHARA_NAME = {"Unknown", "Unknown"};
+
+	std::pair<std::string, std::string>& get_chara_names(const int chara_id)
+	{
+		if (master == nullptr)
+		{
+			return UNKNOWN_CHARA_NAME;
+		}
+
+		if (chara_names.count(chara_id) == 0)
+		{
+			auto name = find_text(170, chara_id);
+			auto cast_name = find_text(7, chara_id);
+			if (name.empty() || cast_name.empty())
+			{
+				return UNKNOWN_CHARA_NAME;
+			}
+
+			chara_names[chara_id] = {name, cast_name};
+		}
+		return chara_names[chara_id];
+	}
+
+
+	const std::map<int, std::string> proper_labels = {
+		{1, "G"}, {2, "F"}, {3, "E"}, {4, "D"}, {5, "C"}, {6, "B"}, {7, "A"}, {8, "S"},
+	};
+
+	std::map<int, std::string> formatted_chara_proper_labels;
+
+	std::string get_formatted_chara_proper_labels(const int chara_id)
+	{
+		if (master == nullptr)
+		{
+			return "";
+		}
+
+		if (formatted_chara_proper_labels.count(chara_id) == 0)
+		{
+			SQLite::Statement query(
+				*master,
+				"SELECT proper_ground_turf, proper_ground_dirt, proper_distance_short, proper_distance_mile, proper_distance_middle, proper_distance_long FROM single_mode_scout_chara WHERE chara_id=? LIMIT 1;");
+			query.bind(1, chara_id);
+
+			while (query.executeStep())
+			{
+				std::string formatted;
+				auto values = query.getColumns<std::vector<int>, 6>();
+
+				for (int i = 0; i < 6; i++)
+				{
+					formatted += " ";
+					formatted += proper_labels.at(values[i]);
+					if (i == 1)
+					{
+						formatted += " | ";
+					}
+				}
+
+				formatted_chara_proper_labels[chara_id] = formatted;
+			}
+		}
+		return formatted_chara_proper_labels[chara_id];
 	}
 }

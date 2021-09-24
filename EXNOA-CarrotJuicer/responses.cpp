@@ -195,6 +195,65 @@ namespace responses
 		std::cout << '\n';
 	}
 
+	void print_aoharu_team_info(nlohmann::basic_json<>& d)
+	{
+		auto& td = d.at("team_data_set");
+		auto& ti = td.at("team_info");
+
+		std::map<int, int> chara_id_map;
+		for (auto& ei : td.at("evaluation_info_array"))
+		{
+			chara_id_map[ei.at("target_id")] = ei.at("chara_id");
+		}
+
+		std::map<int, nlohmann::basic_json<>> current_team_map; // from chara_id
+		for (auto& td : ti.at("team_data_array"))
+		{
+			current_team_map[td.at("chara_id")] = td;
+		}
+
+		std::cout << u8"   ID | スピ | スタ | パワ | 根性 | 賢さ |  評価 | 芝ダ | 短マ中長 | 　　   | 　　　　　　　　　 |\n";
+
+		auto chara_info_array = ti.at("team_chara_info_array").get<std::vector<nlohmann::basic_json<>>>();
+		std::sort(chara_info_array.begin(), chara_info_array.end(), [](const auto& lhs, const auto& rhs)
+		{
+			return lhs.at("rank_score") > rhs.at("rank_score");
+		});
+
+		for (auto& member : chara_info_array)
+		{
+			int chara_id = chara_id_map[member.at("training_partner_id")];
+			std::cout << " " << std::setw(4) << chara_id << " | ";
+
+			for (auto& status_field : {"speed", "stamina", "power", "guts", "wiz"})
+			{
+				std::cout << std::setw(4) << static_cast<int>(member.at(status_field)) << " | ";
+			}
+
+			std::cout << std::setw(5) << static_cast<int>(member.at("rank_score")) << " | "
+				<< mdb::get_formatted_chara_proper_labels(chara_id) << " | ";
+
+			if (auto distance_type = current_team_map.find(chara_id); distance_type != current_team_map.end())
+			{
+				auto& team_data = distance_type->second;
+				std::cout << distance_type_labels.at(team_data.at("distance_type")) << " " << team_data.at("member_id");
+			}
+			else
+			{
+				std::cout << u8"　　  ";
+			}
+			std::cout << " | ";
+
+			auto& chara_name = mdb::get_chara_names(chara_id);
+			std::cout << chara_name.first;
+			for (int i = chara_name.first.length() / 3; i < 9; i++) // Assume all names follow JRA standard (<= 9 カタカナ)
+			{
+				std::cout << u8"　";
+			}
+			std::cout << " | " << chara_name.second << "\n";
+		}
+	}
+
 	void print_response_additional_info(const std::string& data)
 	{
 		try
@@ -252,6 +311,11 @@ namespace responses
 					{
 						print_team_stadium_opponent_info(o);
 					}
+				}
+				else if (data.contains("team_data_set") && !data.contains("home_info"))
+				{
+					// single_mode_team/team_edit, team_race_*
+					print_aoharu_team_info(data);
 				}
 			}
 			catch (const json::out_of_range& e)
