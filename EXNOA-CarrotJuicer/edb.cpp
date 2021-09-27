@@ -14,7 +14,7 @@ namespace edb
 	{
 		if (!std::filesystem::exists("cjedb.json"))
 		{
-			std::cout << "Skipping cjedb.json." << std::endl;
+			std::cout << "Skipping cjedb.json.\n";
 			return;
 		}
 
@@ -24,38 +24,38 @@ namespace edb
 			std::ifstream i("cjedb.json");
 			i >> j;
 
-			auto events = j.at("events");
+			const auto& events = j.at("events");
 			for (auto it = events.begin(); it < events.end(); ++it)
 			{
 				events_map[it.value().at("storyId")] = it.value();
 			}
 
-			std::cout << "cjedb.json opened, read " << events_map.size() << " events." << std::endl;
+			std::cout << "cjedb.json opened, read " << events_map.size() << " events.\n";
 		}
 		catch (std::exception& e)
 		{
-			std::cout << "Exception reading cjedb.json: " << e.what() << std::endl;
+			std::cout << "Exception reading cjedb.json: " << e.what() << "\n";
 		}
 	}
 
-	void print_choices(int story_id)
+	void print_choices(const int story_id)
 	{
 		try
 		{
-			if (auto search = events_map.find(story_id); search != events_map.end())
+			if (const auto search = events_map.find(story_id); search != events_map.end())
 			{
-				auto& choice_array = search->second.at("choices");
-				for (auto& choice : choice_array)
+				const auto& choice_array = search->second.at("choices");
+				for (const auto& choice : choice_array)
 				{
-					std::cout << std::endl << choice.at("title").get<std::string>() << std::endl
-						<< choice.at("text").get<std::string>() << std::endl;
+					std::cout << "\n" << choice.at("title").get<std::string>() << "\n"
+						<< choice.at("text").get<std::string>() << "\n";
 				}
-				std::cout << std::endl;
+				std::cout << "\n";
 			}
 		}
-		catch (std::exception& e)
+		catch (const std::exception& e)
 		{
-			std::cout << "Exception getting choices: " << e.what() << std::endl;
+			std::cout << "Exception getting choices: " << e.what() << "\n";
 		}
 	}
 }

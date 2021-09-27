@@ -15,5 +15,5 @@ namespace config
 
 	void load();
 
-	config_struct& get();
+	config_struct const& get();
 }

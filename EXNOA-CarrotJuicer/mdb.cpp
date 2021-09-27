@@ -28,17 +28,17 @@ namespace mdb
 			}
 
 			WCHAR buffer[MAX_PATH];
-			int len = GetEnvironmentVariable(L"USERPROFILE", buffer, MAX_PATH);
+			const int len = GetEnvironmentVariable(L"USERPROFILE", buffer, MAX_PATH);
 
 			std::wstring path(buffer, len);
 			path += L"\\AppData\\LocalLow\\Cygames\\umamusume\\master\\master.mdb";
 			master = new SQLite::Database(utf8_encode(path), SQLite::OPEN_READONLY);
 
-			std::cout << "master.mdb opened." << std::endl;
+			std::cout << "master.mdb opened.\n";
 		}
-		catch (std::exception& e)
+		catch (const std::exception& e)
 		{
-			std::cout << "Exception opening master.mdb: " << e.what() << std::endl;
+			std::cout << "Exception opening master.mdb: " << e.what() << "\n";
 		}
 	}
 
@@ -56,11 +56,11 @@ namespace mdb
 		}
 		catch (std::exception& e)
 		{
-			std::cout << "Exception unloading master.mdb: " << e.what() << std::endl;
+			std::cout << "Exception unloading master.mdb: " << e.what() << "\n";
 		}
 	}
 
-	std::string find_text(int category, int index)
+	std::string find_text(const int category, const int index)
 	{
 		if (master == nullptr)
 		{
@@ -75,23 +75,21 @@ namespace mdb
 
 			while (query.executeStep())
 			{
-				std::string s = query.getColumn(0);
-
-				return s;
+				return query.getColumn(0).getString();
 			}
 		}
 		catch (std::exception& e)
 		{
-			std::cout << "Exception querying master.mdb: " << e.what() << std::endl;
+			std::cout << "Exception querying master.mdb: " << e.what() << "\n";
 		}
 		return "";
 	}
 
 
 	std::map<int, std::pair<std::string, std::string>> chara_names;
-	std::pair<std::string, std::string> UNKNOWN_CHARA_NAME = {"Unknown", "Unknown"};
+	const std::pair<std::string, std::string> UNKNOWN_CHARA_NAME = {"Unknown", "Unknown"};
 
-	std::pair<std::string, std::string>& get_chara_names(const int chara_id)
+	const std::pair<std::string, std::string>& get_chara_names(const int chara_id)
 	{
 		if (master == nullptr)
 		{

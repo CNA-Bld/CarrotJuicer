@@ -5,5 +5,5 @@ namespace notifier
 {
 	void init();
 
-	void notify_response(std::string& data);
+	void notify_response(const std::string& data);
 }

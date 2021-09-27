@@ -17,7 +17,7 @@ namespace notifier
 		client->set_connection_timeout(0, c.notifier_connection_timeout_msec * 1000);
 	}
 
-	void notify_response(std::string& data)
+	void notify_response(const std::string& data)
 	{
 		if (client == nullptr) return;
 
@@ -25,13 +25,12 @@ namespace notifier
 		{
 			if (res->status != 200)
 			{
-				std::cout << "Unexpected response from listener: " << res->status << std::endl;
+				std::cout << "Unexpected response from listener: " << res->status << "\n";
 			}
 		}
 		else
 		{
-			auto err = res.error();
-			std::cout << "Failed to notify listener: " << err << std::endl;
+			std::cout << "Failed to notify listener: " << res.error() << "\n";
 		}
 	}
 }

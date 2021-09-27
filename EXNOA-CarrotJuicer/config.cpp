@@ -34,15 +34,15 @@ namespace config
 			CJCONFIG_READ_PROPERTY(notifier_host, j, config);
 			CJCONFIG_READ_PROPERTY(notifier_connection_timeout_msec, j, config);
 
-			std::cout << "Loaded cjconfig.json" << std::endl;
+			std::cout << "Loaded cjconfig.json\n";
 		}
-		catch (std::exception& e)
+		catch (const std::exception& e)
 		{
-			std::cout << "Exception reading cjconfig.json: " << e.what() << std::endl;
+			std::cout << "Exception reading cjconfig.json: " << e.what() << "\n";
 		}
 	}
 
-	config_struct& get()
+	const config_struct& get()
 	{
 		return config;
 	}
