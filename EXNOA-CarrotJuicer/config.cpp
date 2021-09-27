@@ -12,7 +12,8 @@ using json = nlohmann::json;
 namespace config
 {
 	config_struct config = {
-		true, true, false, "", 100
+		true, true,
+		false, "", 100, true,
 	};
 
 	void load()
@@ -33,6 +34,7 @@ namespace config
 			CJCONFIG_READ_PROPERTY(enable_notifier, j, config);
 			CJCONFIG_READ_PROPERTY(notifier_host, j, config);
 			CJCONFIG_READ_PROPERTY(notifier_connection_timeout_msec, j, config);
+			CJCONFIG_READ_PROPERTY(notifier_print_error, j, config);
 
 			std::cout << "Loaded cjconfig.json\n";
 		}

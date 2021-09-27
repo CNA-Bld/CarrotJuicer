@@ -40,6 +40,7 @@ Supported options and their default values:
 	"enable_notifier": false,
 	"notifier_host": "",
 	"notifier_connection_timeout_msec": 100,
+	"notifier_print_error": true,
 }
 ```
 
@@ -51,7 +52,7 @@ If `cjconfig.json` sets `enable_notifier` to `true`, we will attempt to notify a
 
 This does not support multiple listeners, and if you indeed would like to do this, you will have to write a demultiplexing server yourself.
 
-Note that this HTTP request blocks the game, to avoid potential races with the listener. There is an option `notifier_connection_timeout_msec` which defaults to 100 ms. If the listener is not running, we will at most wait for 100 ms during connection setup so we don't slow down the game too much.
+Note that this HTTP request blocks the game, to avoid potential races with the listener. There is an option `notifier_connection_timeout_msec` which defaults to 100 ms. If the listener is not running, we will at most wait for 100 ms during connection setup so we don't slow down the game too much. If `notifier_print_error` is true, an error message will be printed when we fail to notify the listener. Note that non-200 responses from the listener are always printed regardless the value of `notifier_print_error`.
 
 ### `race_scenario`
 

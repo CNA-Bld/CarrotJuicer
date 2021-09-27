@@ -11,6 +11,7 @@ namespace config
 		bool enable_notifier;
 		std::string notifier_host;
 		int notifier_connection_timeout_msec;
+		bool notifier_print_error;
 	};
 
 	void load();

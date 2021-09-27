@@ -30,7 +30,10 @@ namespace notifier
 		}
 		else
 		{
-			std::cout << "Failed to notify listener: " << res.error() << "\n";
+			if (config::get().notifier_print_error)
+			{
+				std::cout << "Failed to notify listener: " << res.error() << "\n";
+			}
 		}
 	}
 }
