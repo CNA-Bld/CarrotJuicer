@@ -32,7 +32,7 @@ To tweak EXNOA-CarrotJuicer's features, create a file named `cjconfig.json` in t
 
 Supported options and their default values:
 
-```json
+```js
 {
 	"save_request": true,
 	"save_response": true,
@@ -41,6 +41,8 @@ Supported options and their default values:
 	"notifier_host": "",
 	"notifier_connection_timeout_msec": 100,
 	"notifier_print_error": true,
+
+	"aoharu_team_sort_with_speed": true, // If false, sort with rank score.
 }
 ```
 

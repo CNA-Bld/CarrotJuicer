@@ -2,6 +2,8 @@
 #include <iomanip>
 #include <iostream>
 #include <nlohmann/json.hpp>
+
+#include "config.hpp"
 #include "mdb.hpp"
 #include "edb.hpp"
 
@@ -217,6 +219,10 @@ namespace responses
 		auto chara_info_array = ti.at("team_chara_info_array").get<std::vector<json>>();
 		std::sort(chara_info_array.begin(), chara_info_array.end(), [](const auto& lhs, const auto& rhs)
 		{
+			if (config::get().aoharu_team_sort_with_speed)
+			{
+				return lhs.at("speed") > rhs.at("speed");
+			}
 			return lhs.at("rank_score") > rhs.at("rank_score");
 		});
 
