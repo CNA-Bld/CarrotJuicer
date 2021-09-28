@@ -6,7 +6,7 @@ For Android, refer to [Riru-CarrotJuicer](https://github.com/CNA-Bld/Riru-Carrot
 
 ## Usage
 
-Theoretically this should support "modern" versions of Windows, as long as it is x64. But this is only tested with Windows 10 v2004.
+Theoretically this should support "modern" versions of Windows, as long as it is x64. But this is only tested with Windows 10 v21H1.
 
 Please make sure that you have installed the latest Visual C++ 2019 Redistributable, otherwise the game would crash at start up time with no message at all.
 
@@ -36,6 +36,8 @@ Supported options and their default values:
 {
 	"save_request": true,
 	"save_response": true,
+
+	"enable_ansi_colors": true, // Enable features that depend on ANSI colors. Works only on Windows 10 v1511+.
 
 	"enable_notifier": false,
 	"notifier_host": "",

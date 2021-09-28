@@ -4,6 +4,8 @@
 #include <Windows.h>
 #include <SQLiteCpp/SQLiteCpp.h>
 
+#include "config.hpp"
+
 
 namespace mdb
 {
@@ -138,8 +140,11 @@ namespace mdb
 
 				for (int i = 0; i < 6; i++)
 				{
+					const bool dim = config::get().enable_ansi_colors && (values[i] < 7);
 					formatted += " ";
+					formatted += dim ? "\x1b[90m" : "";
 					formatted += proper_labels.at(values[i]);
+					formatted += dim ? "\x1b[0m" : "";
 					if (i == 1)
 					{
 						formatted += " | ";

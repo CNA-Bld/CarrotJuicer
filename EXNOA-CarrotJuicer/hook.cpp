@@ -30,6 +30,19 @@ namespace
 		// set this to avoid turn japanese texts into question mark
 		SetConsoleOutputCP(CP_UTF8);
 		std::locale::global(std::locale(""));
+
+		const HANDLE handle = CreateFile(L"CONOUT$", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE,
+		                                 NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		DWORD mode;
+		if (!GetConsoleMode(handle, &mode))
+		{
+			std::cout << "GetConsoleMode " << GetLastError() << "\n";
+		}
+		mode |= ENABLE_PROCESSED_OUTPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+		if (!SetConsoleMode(handle, mode))
+		{
+			std::cout << "SetConsoleMode " << GetLastError() << "\n";
+		}
 	}
 
 	std::string current_time()

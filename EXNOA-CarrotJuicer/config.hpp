@@ -8,6 +8,8 @@ namespace config
 		bool save_request;
 		bool save_response;
 
+		bool enable_ansi_colors;
+
 		bool enable_notifier;
 		std::string notifier_host;
 		int notifier_connection_timeout_msec;
