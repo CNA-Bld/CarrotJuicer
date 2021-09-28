@@ -94,7 +94,7 @@ namespace responses
 	};
 
 	const std::map<int, std::string> running_style_labels = {
-		{0, u8"　"}, {1, u8"逃"}, {2, u8"先"}, {3, u8"差"}, {4, u8"追"}
+		{0, u8"  "}, {1, u8"逃"}, {2, u8"先"}, {3, u8"差"}, {4, u8"追"}
 	};
 	const std::map<int, std::string> running_style_proper_fields = {
 		{1, "proper_running_style_nige"},
@@ -214,7 +214,7 @@ namespace responses
 			current_team_map[td.at("chara_id")] = td;
 		}
 
-		std::cout << u8"   ID | スピ | スタ | パワ | 根性 | 賢さ |  評価 | 芝ダ | 短マ中長 | 　　   | 　　　　　　　　　 |\n";
+		std::cout << u8"   ID | スピ | スタ | パワ | 根性 | 賢さ |  評価 | 芝ダ | 短マ中長 |        |                    |\n";
 
 		auto chara_info_array = ti.at("team_chara_info_array").get<std::vector<json>>();
 		std::sort(chara_info_array.begin(), chara_info_array.end(), [](const auto& lhs, const auto& rhs)
@@ -246,7 +246,7 @@ namespace responses
 			}
 			else
 			{
-				std::cout << u8"　　  ";
+				std::cout << "      ";
 			}
 			std::cout << " | ";
 
@@ -254,7 +254,7 @@ namespace responses
 			std::cout << chara_name.first;
 			for (int i = chara_name.first.length() / 3; i < 9; i++) // Assume all names follow JRA standard (<= 9 カタカナ)
 			{
-				std::cout << u8"　";
+				std::cout << "  ";
 			}
 			std::cout << " | " << chara_name.second << "\n";
 		}
