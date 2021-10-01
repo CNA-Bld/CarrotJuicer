@@ -12,7 +12,7 @@ namespace mdb
 	std::string utf8_encode(const std::wstring& in)
 	{
 		if (in.empty()) return std::string();
-		int size = WideCharToMultiByte(CP_UTF8, 0, &in[0], in.size(), NULL, 0, NULL, NULL);
+		const int size = WideCharToMultiByte(CP_UTF8, 0, &in[0], in.size(), NULL, 0, NULL, NULL);
 		std::string dst(size, 0);
 		WideCharToMultiByte(CP_UTF8, 0, &in[0], in.size(), &dst[0], size, NULL, NULL);
 		return dst;

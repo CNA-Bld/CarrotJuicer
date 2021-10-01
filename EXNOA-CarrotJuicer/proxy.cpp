@@ -1,25 +1,24 @@
 #include <string>
-#include <windows.h>
+#include <Windows.h>
 
-extern "C"
-{
-	void* GetFileVersionInfoA_Original = NULL;
-	void* GetFileVersionInfoByHandle_Original = NULL;
-	void* GetFileVersionInfoExA_Original = NULL;
-	void* GetFileVersionInfoExW_Original = NULL;
-	void* GetFileVersionInfoSizeA_Original = NULL;
-	void* GetFileVersionInfoSizeExA_Original = NULL;
-	void* GetFileVersionInfoSizeExW_Original = NULL;
-	void* GetFileVersionInfoSizeW_Original = NULL;
-	void* GetFileVersionInfoW_Original = NULL;
-	void* VerFindFileA_Original = NULL;
-	void* VerFindFileW_Original = NULL;
-	void* VerInstallFileA_Original = NULL;
-	void* VerInstallFileW_Original = NULL;
-	void* VerLanguageNameA_Original = NULL;
-	void* VerLanguageNameW_Original = NULL;
-	void* VerQueryValueA_Original = NULL;
-	void* VerQueryValueW_Original = NULL;
+extern "C" {
+void* GetFileVersionInfoA_Original = NULL;
+void* GetFileVersionInfoByHandle_Original = NULL;
+void* GetFileVersionInfoExA_Original = NULL;
+void* GetFileVersionInfoExW_Original = NULL;
+void* GetFileVersionInfoSizeA_Original = NULL;
+void* GetFileVersionInfoSizeExA_Original = NULL;
+void* GetFileVersionInfoSizeExW_Original = NULL;
+void* GetFileVersionInfoSizeW_Original = NULL;
+void* GetFileVersionInfoW_Original = NULL;
+void* VerFindFileA_Original = NULL;
+void* VerFindFileW_Original = NULL;
+void* VerInstallFileA_Original = NULL;
+void* VerInstallFileW_Original = NULL;
+void* VerLanguageNameA_Original = NULL;
+void* VerLanguageNameW_Original = NULL;
+void* VerQueryValueA_Original = NULL;
+void* VerQueryValueW_Original = NULL;
 }
 
 namespace
@@ -53,7 +52,7 @@ namespace
 			VerLanguageNameW_Original = GetProcAddress(original_dll, "VerLanguageNameW");
 			VerQueryValueA_Original = GetProcAddress(original_dll, "VerQueryValueA");
 			VerQueryValueW_Original = GetProcAddress(original_dll, "VerQueryValueW");
-		};
+		}
 	};
 
 	version_init init{};

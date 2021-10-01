@@ -1,5 +1,4 @@
-﻿#include <cstdio>
-#include <iomanip>
+﻿#include <iomanip>
 #include <iostream>
 #include <nlohmann/json.hpp>
 
@@ -114,7 +113,7 @@ namespace responses
 
 	void print_team_stadium_opponent_info(const json& o)
 	{
-		const auto endl = "|\n";
+		constexpr auto endl = "|\n";
 
 		std::cout << "evaluation_point = " << o.at("evaluation_point") << '\n';
 
@@ -147,11 +146,11 @@ namespace responses
 
 			if (const int trained_chara_id = team_data.at("trained_chara_id"); trained_chara_id != 0)
 			{
-				trained_chara_array.push_back(trained_chara_map.at(team_data.at("trained_chara_id")));
+				trained_chara_array.emplace_back(trained_chara_map.at(team_data.at("trained_chara_id")));
 			}
 			else
 			{
-				trained_chara_array.push_back(nullptr);
+				trained_chara_array.emplace_back(nullptr);
 			}
 		}
 		std::cout << endl;
@@ -199,11 +198,11 @@ namespace responses
 
 	void print_aoharu_team_info(const json& d)
 	{
-		const auto& td = d.at("team_data_set");
-		const auto& ti = td.at("team_info");
+		const auto& tds = d.at("team_data_set");
+		const auto& ti = tds.at("team_info");
 
 		std::map<int, int> chara_id_map;
-		for (const auto& ei : td.at("evaluation_info_array"))
+		for (const auto& ei : tds.at("evaluation_info_array"))
 		{
 			chara_id_map[ei.at("target_id")] = ei.at("chara_id");
 		}

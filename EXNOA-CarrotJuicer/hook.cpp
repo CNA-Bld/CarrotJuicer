@@ -3,7 +3,7 @@
 #include <locale>
 #include <string>
 #include <thread>
-#include <windows.h>
+#include <Windows.h>
 #include <MinHook.h>
 
 #include "config.hpp"
@@ -72,7 +72,7 @@ namespace
 		int compressedSize,
 		int dstCapacity)
 	{
-		int ret = reinterpret_cast<decltype(LZ4_decompress_safe_ext_hook)*>(LZ4_decompress_safe_ext_orig)(
+		const int ret = reinterpret_cast<decltype(LZ4_decompress_safe_ext_hook)*>(LZ4_decompress_safe_ext_orig)(
 			src, dst, compressedSize, dstCapacity);
 
 		if (config::get().save_response)
@@ -104,7 +104,7 @@ namespace
 		int srcSize,
 		int dstCapacity)
 	{
-		int ret = reinterpret_cast<decltype(LZ4_compress_default_ext_hook)*>(LZ4_compress_default_ext_orig)(
+		const int ret = reinterpret_cast<decltype(LZ4_compress_default_ext_hook)*>(LZ4_compress_default_ext_orig)(
 			src, dst, srcSize, dstCapacity);
 
 		if (config::get().save_request)
