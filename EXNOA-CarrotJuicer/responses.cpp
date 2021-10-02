@@ -56,7 +56,7 @@ namespace responses
 		}
 	}
 
-	void print_event_data(const json& e)
+	bool print_event_data(const json& e) // Returns true if there are more than 1 choice.
 	{
 		const int story_id = e.at("story_id").get<int>();
 
@@ -78,7 +78,10 @@ namespace responses
 					<< (choice + 1 == choice_array.end() ? "" : ", ");
 			}
 			std::cout << "\n";
+
+			return choice_array.size() > 1;
 		}
+		return false;
 	}
 
 	const std::map<int, std::string> distance_type_labels = {
@@ -106,7 +109,7 @@ namespace responses
 		{1, "G"}, {2, "F"}, {3, "E"}, {4, "D"}, {5, "C"}, {6, "B"}, {7, "A"}, {8, "S"},
 	};
 
-	const std::vector<std::pair<std::string, std::string>> status_data_fields = {
+	const std::vector<std::pair<std::string, std::string>> team_stadium_chara_status_data_fields = {
 		{u8"スピ", "speed"}, {u8"スタ", "stamina"}, {u8"パワ", "power"}, {u8"根性", "guts"}, {u8"賢さ", "wiz"},
 		{u8"評価", "rank_score"},
 	};
@@ -176,7 +179,7 @@ namespace responses
 		}
 		std::cout << endl;
 
-		for (const auto& [label, field] : status_data_fields)
+		for (const auto& [label, field] : team_stadium_chara_status_data_fields)
 		{
 			std::cout << label;
 			for (int i = 0; i < team_data_array.size(); ++i)
@@ -259,6 +262,17 @@ namespace responses
 		}
 	}
 
+	void print_single_mode_chara_info(const json& chara_info)
+	{
+		std::cout << u8"\n スピ | スタ | パワ | 根性 | 賢さ | 体力\n ";
+
+		for (auto& status_field : {"speed", "stamina", "power", "guts", "wiz"})
+		{
+			std::cout << std::setw(4) << static_cast<int>(chara_info.at(status_field)) << " | ";
+		}
+		std::cout << chara_info.at("vital") << " / " << chara_info.at("max_vital") << "\n";
+	}
+
 	void print_response_additional_info(const std::string& data)
 	{
 		try
@@ -297,9 +311,14 @@ namespace responses
 				else if (data.contains("unchecked_event_array"))
 				{
 					// In single mode.
+					bool should_print_chara_info = false;
 					for (const auto& e : data.at("unchecked_event_array"))
 					{
-						print_event_data(e);
+						should_print_chara_info = print_event_data(e) || should_print_chara_info;
+					}
+					if (should_print_chara_info)
+					{
+						print_single_mode_chara_info(data.at("chara_info"));
 					}
 				}
 				else if (data.contains("event_contents_info"))
