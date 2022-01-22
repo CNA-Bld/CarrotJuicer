@@ -8,6 +8,8 @@ namespace config
 		bool save_request;
 		bool save_response;
 
+		bool print_request;
+
 		bool enable_ansi_colors;
 
 		bool enable_notifier;

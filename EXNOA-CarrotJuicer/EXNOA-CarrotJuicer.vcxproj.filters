@@ -31,6 +31,9 @@
     <Filter Include="Source Files\config">
       <UniqueIdentifier>{b99a1577-4528-43fc-b48b-15daf6ad1737}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\requests">
+      <UniqueIdentifier>{5848b94d-eb36-4a6f-bc2d-a86f927e937b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -56,6 +59,9 @@
     </ClCompile>
     <ClCompile Include="config.cpp">
       <Filter>Source Files\config</Filter>
+    </ClCompile>
+    <ClCompile Include="requests.cpp">
+      <Filter>Source Files\requests</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -86,6 +92,9 @@
     </ClInclude>
     <ClInclude Include="config.hpp">
       <Filter>Source Files\config</Filter>
+    </ClInclude>
+    <ClInclude Include="requests.hpp">
+      <Filter>Source Files\requests</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

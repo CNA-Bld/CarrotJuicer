@@ -10,6 +10,7 @@
 #include "edb.hpp"
 #include "responses.hpp"
 #include "notifier.hpp"
+#include "requests.hpp"
 
 using namespace std::literals;
 
@@ -112,6 +113,12 @@ namespace
 			const auto out_path = std::string("CarrotJuicer\\").append(current_time()).append("Q.msgpack");
 			write_file(out_path, src, srcSize);
 			std::cout << "wrote request to " << out_path << "\n";
+		}
+
+		if (config::get().print_request)
+		{
+			const std::string data(src, srcSize);
+			requests::print_request_additional_info(data);
 		}
 
 		return ret;
