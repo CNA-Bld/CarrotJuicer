@@ -305,7 +305,8 @@ namespace responses
 				else if (data.contains("common_define") && data.contains("res_version"))
 				{
 					// load/index, open master.mdb
-					std::cout << "Received load/index, loading master.mdb.\n";
+					std::cout << "Received load/index, loading master.mdb.\nres_version = "
+						<< data.at("res_version") << "\n";
 					mdb::init();
 				}
 				else if (data.contains("unchecked_event_array"))
