@@ -45,8 +45,15 @@ Supported options and their default values:
 	"notifier_print_error": true,
 
 	"aoharu_team_sort_with_speed": true, // If false, sort with rank score.
+	"aoharu_print_team_average_status_max_turn": 0,
 }
 ```
+
+#### `aoharu_print_team_average_status_max_turn`
+
+This option will cause the average status of team members to be printed, before the requested turn ends. For instance, setting this to 24 would enable this feature throughout the first year.
+
+This might be useful if you would like to precisely control the training levels.
 
 ### Notifier
 

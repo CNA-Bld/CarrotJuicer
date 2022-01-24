@@ -114,6 +114,32 @@ namespace responses
 		{u8"評価", "rank_score"},
 	};
 
+	void print_aoharu_team_average_status(const json& data)
+	{
+		int speed = 0, stamina = 0, power = 0, guts = 0, wiz = 0;
+
+		std::vector<json> charas;
+		charas.emplace_back(data.at("chara_info"));
+		auto& members = data.at("team_data_set").at("team_info").at("team_chara_info_array");
+		charas.insert(charas.end(), members.begin(), members.end());
+
+		for (auto& chara : charas)
+		{
+			speed += static_cast<int>(chara.at("speed"));
+			stamina += static_cast<int>(chara.at("stamina"));
+			power += static_cast<int>(chara.at("power"));
+			guts += static_cast<int>(chara.at("guts"));
+			wiz += static_cast<int>(chara.at("wiz"));
+		}
+
+		std::cout << u8" Team Avg | スピ | スタ | パワ | 根性 | 賢さ |\n          | ";
+		for (auto i : {speed, stamina, power, guts, wiz})
+		{
+			std::cout << std::setw(4) << i / charas.size() << " | ";
+		}
+		std::cout << "\n\n";
+	}
+
 	void print_team_stadium_opponent_info(const json& o)
 	{
 		constexpr auto endl = "|\n";
@@ -312,6 +338,13 @@ namespace responses
 				else if (data.contains("unchecked_event_array"))
 				{
 					// In single mode.
+					if (data.contains("team_data_set") &&
+						static_cast<int>(data.at("chara_info").at("turn")) <=
+						config::get().aoharu_print_team_average_status_max_turn)
+					{
+						print_aoharu_team_average_status(data);
+					}
+
 					bool should_print_chara_info = false;
 					for (const auto& e : data.at("unchecked_event_array"))
 					{
