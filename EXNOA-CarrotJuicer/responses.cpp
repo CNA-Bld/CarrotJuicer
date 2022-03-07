@@ -16,6 +16,11 @@ namespace responses
 	std::string opponent_list_opponent_info_header = "\x88\xC0\x01";
 	std::string opponent_list_opponent_info_header_fixed = "\x87";
 
+	std::string load_index_sig_header = "\xA9\x63\x61\x72\x64\x5F\x6C\x69\x73\x74";
+	std::string load_index_sig_footer = "\x01\xB1\x73\x75\x70\x70\x6F\x72\x74\x5F\x63\x61\x72\x64\x5F\x6C\x69\x73\x74";
+	std::string load_index_card_list_header = "\x86\xC0\x01";
+	std::string load_index_card_list_header_fixed = "\x85";
+
 	json try_parse_msgpack(const std::string& data)
 	{
 		try
@@ -28,28 +33,45 @@ namespace responses
 			{
 				// Try to fix team_stadium/opponent_list
 				auto idx = data.find(opponent_list_sig);
-				if (idx == std::string::npos)
+				if (idx != std::string::npos)
 				{
-					throw;
+					std::string fixed = data;
+					int cnt = 0;
+					while (true)
+					{
+						idx = fixed.find(opponent_list_opponent_info_header, idx);
+						if (idx == std::string::npos) break;
+						fixed.replace(idx, opponent_list_opponent_info_header.length(),
+						              opponent_list_opponent_info_header_fixed);
+						idx += opponent_list_opponent_info_header_fixed.length();
+						cnt += 1;
+					}
+					if (cnt != 3)
+					{
+						throw;
+					}
+
+					return json::from_msgpack(fixed);
 				}
 
-				std::string fixed = data;
-				int cnt = 0;
-				while (true)
+				// Try to fix load/index
+				idx = data.find(load_index_sig_header);
+				if (idx != std::string::npos)
 				{
-					idx = fixed.find(opponent_list_opponent_info_header, idx);
-					if (idx == std::string::npos) break;
-					fixed.replace(idx, opponent_list_opponent_info_header.length(),
-					              opponent_list_opponent_info_header_fixed);
-					idx += opponent_list_opponent_info_header_fixed.length();
-					cnt += 1;
-				}
-				if (cnt != 3)
-				{
-					throw;
-				}
+					auto idx_end = data.find(load_index_sig_footer, idx);
+					std::string fixed = data;
+					while (true)
+					{
+						idx = fixed.find(load_index_card_list_header, idx);
+						if (idx == std::string::npos || idx > idx_end) break;
+						fixed.replace(idx, load_index_card_list_header.length(),
+						              load_index_card_list_header_fixed);
+						idx += load_index_card_list_header_fixed.length();
+						idx_end -= (load_index_card_list_header.length() - load_index_card_list_header_fixed.length());
+					}
 
-				return json::from_msgpack(fixed);
+					return json::from_msgpack(fixed);
+				}
 			}
 
 			throw;
