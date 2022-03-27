@@ -1,5 +1,6 @@
 ﻿#include <codecvt>
 #include <iostream>
+#include <unordered_map>
 #include <vector>
 #include <Windows.h>
 #include <SQLiteCpp/SQLiteCpp.h>
@@ -15,6 +16,16 @@ namespace mdb
 		const int size = WideCharToMultiByte(CP_UTF8, 0, &in[0], in.size(), NULL, 0, NULL, NULL);
 		std::string dst(size, 0);
 		WideCharToMultiByte(CP_UTF8, 0, &in[0], in.size(), &dst[0], size, NULL, NULL);
+		return dst;
+	}
+
+
+	std::wstring utf8_decode(const std::string& in)
+	{
+		if (in.empty()) return std::wstring();
+		const int size = MultiByteToWideChar(CP_UTF8, 0, &in[0], in.size(), NULL, 0);
+		std::wstring dst(size, 0);
+		MultiByteToWideChar(CP_UTF8, 0, &in[0], in.size(), &dst[0], size);
 		return dst;
 	}
 
@@ -88,7 +99,7 @@ namespace mdb
 	}
 
 
-	std::map<int, std::pair<std::string, std::string>> chara_names;
+	std::unordered_map<int, std::pair<std::string, std::string>> chara_names;
 	const std::pair<std::string, std::string> UNKNOWN_CHARA_NAME = {"Unknown", "Unknown"};
 
 	const std::pair<std::string, std::string>& get_chara_names(const int chara_id)
@@ -113,11 +124,11 @@ namespace mdb
 	}
 
 
-	const std::map<int, std::string> proper_labels = {
+	const std::unordered_map<int, std::string> proper_labels = {
 		{1, "G"}, {2, "F"}, {3, "E"}, {4, "D"}, {5, "C"}, {6, "B"}, {7, "A"}, {8, "S"},
 	};
 
-	std::map<int, std::string> formatted_chara_proper_labels;
+	std::unordered_map<int, std::string> formatted_chara_proper_labels;
 
 	std::string get_formatted_chara_proper_labels(const int chara_id)
 	{
@@ -155,5 +166,39 @@ namespace mdb
 			}
 		}
 		return formatted_chara_proper_labels[chara_id];
+	}
+
+	std::unordered_map<int, std::pair<std::string, std::string>> item_names;
+
+	const std::pair<std::string, std::string>& get_item_names(const int item_id)
+	{
+		if (master == nullptr)
+		{
+			return UNKNOWN_CHARA_NAME;
+		}
+		if (item_names.count(item_id) == 0)
+		{
+			auto name = find_text(225, item_id);
+			auto desc = find_text(238, item_id);
+			if (name.empty() || desc.empty())
+			{
+				return UNKNOWN_CHARA_NAME;
+			}
+
+			// Do stupid things to approximate the length. Assume everything other than ASCII takes 2.
+			// If anything other than ASCII, Kana or Kanji appears we are probably dead.
+			auto utf16 = utf8_decode(name);
+			int len = 0;
+			for (const auto c : utf16)
+			{
+				if (c < 0x80)
+					len += 1;
+				else
+					len += 2;
+			}
+			name.insert(name.end(), 40 - len, ' ');
+			item_names[item_id] = {name, desc};
+		}
+		return item_names[item_id];
 	}
 }

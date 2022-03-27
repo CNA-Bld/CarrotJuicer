@@ -106,10 +106,10 @@ namespace responses
 		return false;
 	}
 
-	const std::map<int, std::string> distance_type_labels = {
+	const std::unordered_map<int, std::string> distance_type_labels = {
 		{1, u8"芝短"}, {2, u8"芝マ"}, {3, u8"芝中"}, {4, u8"芝長"}, {5, u8"ダマ"}
 	};
-	const std::map<int, std::string> distance_type_proper_fields = {
+	const std::unordered_map<int, std::string> distance_type_proper_fields = {
 		{1, "proper_distance_short"},
 		{2, "proper_distance_mile"},
 		{3, "proper_distance_middle"},
@@ -117,17 +117,17 @@ namespace responses
 		{5, "proper_distance_mile"},
 	};
 
-	const std::map<int, std::string> running_style_labels = {
+	const std::unordered_map<int, std::string> running_style_labels = {
 		{0, u8"  "}, {1, u8"逃"}, {2, u8"先"}, {3, u8"差"}, {4, u8"追"}
 	};
-	const std::map<int, std::string> running_style_proper_fields = {
+	const std::unordered_map<int, std::string> running_style_proper_fields = {
 		{1, "proper_running_style_nige"},
 		{2, "proper_running_style_senko"},
 		{3, "proper_running_style_sashi"},
 		{4, "proper_running_style_oikomi"},
 	};
 
-	const std::map<int, std::string> proper_labels = {
+	const std::unordered_map<int, std::string> proper_labels = {
 		{1, "G"}, {2, "F"}, {3, "E"}, {4, "D"}, {5, "C"}, {6, "B"}, {7, "A"}, {8, "S"},
 	};
 
@@ -170,7 +170,7 @@ namespace responses
 
 		auto& team_data_array = o.at("team_data_array");
 
-		std::map<int, json> trained_chara_map;
+		std::unordered_map<int, json> trained_chara_map;
 		std::vector<json> trained_chara_array;
 
 		for (auto& trained_chara : o.at("trained_chara_array"))
@@ -252,13 +252,13 @@ namespace responses
 		const auto& tds = d.at("team_data_set");
 		const auto& ti = tds.at("team_info");
 
-		std::map<int, int> chara_id_map;
+		std::unordered_map<int, int> chara_id_map;
 		for (const auto& ei : tds.at("evaluation_info_array"))
 		{
 			chara_id_map[ei.at("target_id")] = ei.at("chara_id");
 		}
 
-		std::map<int, nlohmann::basic_json<>> current_team_map; // from chara_id
+		std::unordered_map<int, nlohmann::basic_json<>> current_team_map; // from chara_id
 		for (const auto& td : ti.at("team_data_array"))
 		{
 			current_team_map[td.at("chara_id")] = td;
@@ -321,6 +321,38 @@ namespace responses
 		std::cout << chara_info.at("vital") << " / " << chara_info.at("max_vital") << "\n";
 	}
 
+	void print_climax_shop_items(const json& d)
+	{
+		auto& items = d.at("free_data_set").at("pick_up_item_info_array");
+		if (items.empty())
+		{
+			return;
+		}
+
+		const int current_turn = d.at("chara_info").at("turn");
+		const int next_item_change_turn = ((current_turn - 1) / 6 + 1) * 6;
+
+		std::cout << u8"\n Item Name                                | Cnt | Price | Turns | Description\n";
+		for (auto& item : items)
+		{
+			const int count = static_cast<int>(item.at("limit_buy_count")) - static_cast<int>(item.at("item_buy_num"));
+			if (count <= 0)
+				continue;
+
+			const auto& [name, desc] = mdb::get_item_names(item.at("item_id"));
+			const int price = item.at("coin_num");
+			const bool sale_hl = config::get().enable_ansi_colors &&
+				(static_cast<int>(item.at("original_coin_num")) > price);
+			const int limit_turn = item.at("limit_turn");
+			const int until_turn = limit_turn == 0 ? next_item_change_turn : limit_turn;
+			std::cout << " " << name << " | "
+				<< std::setw(3) << count << " | "
+				<< (sale_hl ? "\x1b[93m" : "") << std::setw(5) << price << (sale_hl ? "\x1b[0m" : "") << " | "
+				<< std::setw(5) << (until_turn - current_turn + 1) << " | "
+				<< desc << "\n";
+		}
+	}
+
 	void print_response_additional_info(const std::string& data)
 	{
 		try
@@ -367,14 +399,24 @@ namespace responses
 						print_aoharu_team_average_status(data);
 					}
 
+					auto& unchecked_event_array = data.at("unchecked_event_array");
+
 					bool should_print_chara_info = false;
-					for (const auto& e : data.at("unchecked_event_array"))
+					for (const auto& e : unchecked_event_array)
 					{
 						should_print_chara_info = print_event_data(e) || should_print_chara_info;
 					}
 					if (should_print_chara_info)
 					{
 						print_single_mode_chara_info(data.at("chara_info"));
+					}
+
+					if (unchecked_event_array.empty()
+						&& data.contains("free_data_set") && data.at("free_data_set").contains(
+							"pick_up_item_info_array")
+						&& config::get().climax_print_shop_items)
+					{
+						print_climax_shop_items(data);
 					}
 				}
 				else if (data.contains("event_contents_info"))
@@ -385,7 +427,7 @@ namespace responses
 				else if (data.contains("opponent_info_array"))
 				{
 					// team_stadium/opponent_list
-					for (const auto& o : j.at("data").at("opponent_info_array"))
+					for (const auto& o : data.at("opponent_info_array"))
 					{
 						print_team_stadium_opponent_info(o);
 					}
