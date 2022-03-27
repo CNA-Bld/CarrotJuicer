@@ -46,6 +46,8 @@ Supported options and their default values:
 
 	"aoharu_team_sort_with_speed": true, // If false, sort with rank score.
 	"aoharu_print_team_average_status_max_turn": 0,
+
+	"climax_print_shop_items": true,
 }
 ```
 
