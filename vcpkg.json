@@ -7,5 +7,6 @@
     "minhook",
     "nlohmann-json",
     "sqlitecpp"
-  ]
+  ],
+  "builtin-baseline": "e6c8c2bc051dc40c39cb4b5b49d180208bdfeda9"
 }
