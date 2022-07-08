@@ -2,6 +2,8 @@
 #include <string>
 #include <nlohmann/json.hpp>
 
+#include "config.hpp"
+
 using json = nlohmann::json;
 
 
@@ -49,6 +51,14 @@ namespace requests
 			try
 			{
 				std::cout << j.dump(4) << "\n";
+
+				if (j.contains("button_info") && !static_cast<std::string>(j.at("button_info")).empty())
+				{
+					std::cout << (config::get().enable_ansi_colors ? "\x1b[41m\x1b[93m" : "")
+						<< "button_info is non-empty!"
+						<< (config::get().enable_ansi_colors ? "\x1b[0m" : "")
+						<< "\n";
+				}
 			}
 			catch (const json::out_of_range& e)
 			{
