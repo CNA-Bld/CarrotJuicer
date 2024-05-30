@@ -28,12 +28,7 @@ namespace
 	public:
 		version_init()
 		{
-			WCHAR buffer[MAX_PATH];
-			int len = GetSystemDirectory(buffer, MAX_PATH);
-			std::wstring real_dll_path(buffer, len);
-			real_dll_path += L"\\version_orig.dll";
-
-			auto original_dll = LoadLibrary(real_dll_path.data());
+			auto original_dll = LoadLibrary(L"version_orig.dll");
 
 			GetFileVersionInfoA_Original = GetProcAddress(original_dll, "GetFileVersionInfoA");
 			GetFileVersionInfoByHandle_Original = GetProcAddress(original_dll, "GetFileVersionInfoByHandle");
