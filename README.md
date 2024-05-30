@@ -10,9 +10,9 @@ Theoretically this should support "modern" versions of Windows, as long as it is
 
 Please make sure that you have installed the latest Visual C++ 2019 Redistributable, otherwise the game would crash at start up time with no message at all.
 
-If the precompiled binary from Releases page does not work, try build it yourself. I have seen at least 2 machines where it works only when building locally. I have no idea why, probably the VS build process (or even installing VS?) changes some state in the system.
+Unfortunately for now you have to compile it yourself. See "Build" section below.
 
-1. Copy `version.dll` to the same directory with `umamusume.exe`. This should be `%USERPROFILE%\Umamusume` unless you did some magic yourself.
+1. Set up DLL redirection for `umamusume.exe`. We are looking for `version_orig.dll` which you should copy from your `System32` folder.
 2. Start the game as usual (i.e., with DMM launcher). The captured packets will be saved into `CarrotJuicer` folder in the game directory.
 3. You can investigate the responses with msgpack tools like `msgpack2json -di 123456789R.msgpack`.
 
@@ -20,7 +20,7 @@ If the precompiled binary from Releases page does not work, try build it yoursel
 
 ### `cjedb.json` and `master.mdb`
 
-Starting from v1.2, EXNOA-CarrotJuicer would print extra info that may help users to make strategic decisions. Some features depend on an optional external data file `cjedb.json`. If this file is missing, some features will be disabled.
+Starting from v1.2, EXNOA-CarrotJuicer would print extra info that may help users to make strategic decisions. Some features depend on an optional external data file `CarrotJuicer\cjedb.json`. If this file is missing, some features will be disabled.
 
 The Releases in this repo would bundle the latest file as of that time, but you may wish to check for updates [here](https://github.com/CNA-Bld/cjedb) from time to time, especially after a new charactor or support card is added.
 
@@ -28,7 +28,7 @@ In addition, EXNOA-CarrotJuicer will attempt to read `master.mdb` directly from 
 
 ### `cjconfig.json`
 
-To tweak EXNOA-CarrotJuicer's features, create a file named `cjconfig.json` in the same directory. If a config item is missing (or we fail to parse this file), the default value will be used.
+To tweak EXNOA-CarrotJuicer's features, create a file named `CarrotJuicer\cjconfig.json` in the same directory. If a config item is missing (or we fail to parse this file), the default value will be used.
 
 Supported options and their default values:
 

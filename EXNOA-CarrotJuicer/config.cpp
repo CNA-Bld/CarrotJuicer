@@ -11,6 +11,8 @@ using json = nlohmann::json;
 
 namespace config
 {
+	const std::string config_path = "CarrotJuicer\\cjconfig.json";
+
 	config_struct config = {
 		true, true,
 		false,
@@ -22,7 +24,7 @@ namespace config
 
 	void load()
 	{
-		if (!std::filesystem::exists("cjconfig.json"))
+		if (!std::filesystem::exists(config_path))
 		{
 			return;
 		}
@@ -30,7 +32,7 @@ namespace config
 		try
 		{
 			nlohmann::json j;
-			std::ifstream i("cjconfig.json");
+			std::ifstream i(config_path);
 			i >> j;
 
 			CJCONFIG_READ_PROPERTY(save_request, j, config);

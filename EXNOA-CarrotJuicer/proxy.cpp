@@ -31,7 +31,7 @@ namespace
 			WCHAR buffer[MAX_PATH];
 			int len = GetSystemDirectory(buffer, MAX_PATH);
 			std::wstring real_dll_path(buffer, len);
-			real_dll_path += L"\\version.dll";
+			real_dll_path += L"\\version_orig.dll";
 
 			auto original_dll = LoadLibrary(real_dll_path.data());
 

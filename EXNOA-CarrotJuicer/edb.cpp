@@ -11,9 +11,11 @@ namespace edb
 {
 	std::map<int, std::string> formatted_events_choices;
 
+	const std::string cjedb_path = "CarrotJuicer\\cjedb.json";
+
 	void init()
 	{
-		if (!std::filesystem::exists("cjedb.json"))
+		if (!std::filesystem::exists(cjedb_path))
 		{
 			std::cout << "Skipping cjedb.json.\n";
 			return;
@@ -22,7 +24,7 @@ namespace edb
 		try
 		{
 			json j;
-			std::ifstream i("cjedb.json");
+			std::ifstream i(cjedb_path);
 			i >> j;
 
 			const auto& events = j.at("events");
