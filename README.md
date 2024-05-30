@@ -79,8 +79,8 @@ Requests (files ending with `Q.msgpack`) are not actually msgpack. The current o
 
 * The first 4 bytes likely represent a little-endian int. We name it `offset`, currently always observed to be 0xA6 (166).
 * The following 52 bytes `[+0x04, +0x38)` never change for a single client, even across sessions. We did not test whether this is per-account or per-client.
-* The following 114 bytes `[+0x38, +0xB0)` are different for each request.
-* All remaining is a standard msgpack message. This starts at `+0xB0` which is exactly `offset + 4`.
+* The following 114 bytes `[+0x38, +0xAA)` are different for each request.
+* All remaining is a standard msgpack message. This starts at `+0xAA` which is exactly `offset + 4`.
 
 To investigate the content, remove the first 170 bytes and use msgpack tools, like `tail -c+171 123456789Q.msgpack | msgpack2json -d`.
 
