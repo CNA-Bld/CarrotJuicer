@@ -98,7 +98,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="EXNOA-CarrotJuicer.rc">
+    <ResourceCompile Include="CarrotJuicer.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>

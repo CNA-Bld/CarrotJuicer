@@ -1,4 +1,4 @@
-# EXNOA-CarrotJuicer
+# CarrotJuicer
 
 Hooks the decryption function in `libnative.dll` of ウマ娘プリティーダービー (Umamusume Pretty Derby), to allow inspecting the packets (and provide some useful information during the game).
 
@@ -20,15 +20,15 @@ Unfortunately for now you have to compile it yourself. See "Build" section below
 
 ### `cjedb.json` and `master.mdb`
 
-Starting from v1.2, EXNOA-CarrotJuicer would print extra info that may help users to make strategic decisions. Some features depend on an optional external data file `CarrotJuicer\cjedb.json`. If this file is missing, some features will be disabled.
+Starting from v1.2, CarrotJuicer would print extra info that may help users to make strategic decisions. Some features depend on an optional external data file `CarrotJuicer\cjedb.json`. If this file is missing, some features will be disabled.
 
 The Releases in this repo would bundle the latest file as of that time, but you may wish to check for updates [here](https://github.com/CNA-Bld/cjedb) from time to time, especially after a new charactor or support card is added.
 
-In addition, EXNOA-CarrotJuicer will attempt to read `master.mdb` directly from the game's data directory (in `%USERPROFILE%\AppData\LocalLow\Cygames\umamusume\master`) with a bundled SQLite engine. (Sorry for the bloating file size, but the game itself takes 4GB anyway, so we are as trivial as some rounding error.) If you somehow moved it, please at least make sure a link is available.
+In addition, CarrotJuicer will attempt to read `master.mdb` directly from the game's data directory (in `%USERPROFILE%\AppData\LocalLow\Cygames\umamusume\master`) with a bundled SQLite engine. (Sorry for the bloating file size, but the game itself takes 4GB anyway, so we are as trivial as some rounding error.) If you somehow moved it, please at least make sure a link is available.
 
 ### `cjconfig.json`
 
-To tweak EXNOA-CarrotJuicer's features, create a file named `CarrotJuicer\cjconfig.json` in the same directory. If a config item is missing (or we fail to parse this file), the default value will be used.
+To tweak CarrotJuicer's features, create a file named `CarrotJuicer\cjconfig.json` in the same directory. If a config item is missing (or we fail to parse this file), the default value will be used.
 
 Supported options and their default values:
 
