@@ -5,6 +5,8 @@ namespace config
 {
 	struct config_struct
 	{
+		bool bootstrap_immediately;
+		
 		bool save_request;
 		bool save_response;
 

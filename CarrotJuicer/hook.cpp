@@ -126,6 +126,8 @@ namespace
 
 	void bootstrap_carrot_juicer()
 	{
+		printf("Bootstraping CarrotJuicer...\n");
+
 		std::filesystem::create_directory("CarrotJuicer");
 
 		const auto libnative_module = GetModuleHandle(L"libnative.dll");
@@ -186,13 +188,22 @@ void attach()
 	}
 	printf("MinHook initialized.\n");
 
-	MH_CreateHook(LoadLibraryW, load_library_w_hook, &load_library_w_orig);
-	MH_EnableHook(LoadLibraryW);
-
 	config::load();
 
 	std::thread(edb::init).detach();
 	std::thread(notifier::init).detach();
+
+	if (config::get().bootstrap_immediately)
+	{
+		printf("bootstrap_immediately requested. We will sleep for 1 second and begin...\n");
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+		bootstrap_carrot_juicer();
+	}
+	else 
+	{
+		MH_CreateHook(LoadLibraryW, load_library_w_hook, &load_library_w_orig);
+		MH_EnableHook(LoadLibraryW);
+	}
 }
 
 void detach()
