@@ -30,6 +30,12 @@ namespace
 		{
 			auto original_dll = LoadLibrary(L"version_orig.dll");
 
+			if (original_dll == NULL)
+			{
+				printf("Failed to load version_orig.dll - still continuing.\n");
+				return;
+			}
+
 			GetFileVersionInfoA_Original = GetProcAddress(original_dll, "GetFileVersionInfoA");
 			GetFileVersionInfoByHandle_Original = GetProcAddress(original_dll, "GetFileVersionInfoByHandle");
 			GetFileVersionInfoExA_Original = GetProcAddress(original_dll, "GetFileVersionInfoExA");
