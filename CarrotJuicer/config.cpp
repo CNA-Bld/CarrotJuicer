@@ -14,7 +14,7 @@ namespace config
 	const std::string config_path = "CarrotJuicer\\cjconfig.json";
 
 	config_struct config = {
-		false,
+		0,
 		true, true,
 		false,
 		true,
@@ -36,7 +36,7 @@ namespace config
 			std::ifstream i(config_path);
 			i >> j;
 
-			CJCONFIG_READ_PROPERTY(bootstrap_immediately, j, config);
+			CJCONFIG_READ_PROPERTY(auto_bootstrap_delay_ms, j, config);
 			CJCONFIG_READ_PROPERTY(save_request, j, config);
 			CJCONFIG_READ_PROPERTY(save_response, j, config);
 			CJCONFIG_READ_PROPERTY(print_request, j, config);

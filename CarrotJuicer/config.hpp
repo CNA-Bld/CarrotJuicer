@@ -5,7 +5,7 @@ namespace config
 {
 	struct config_struct
 	{
-		bool bootstrap_immediately;
+		int auto_bootstrap_delay_ms;
 		
 		bool save_request;
 		bool save_response;

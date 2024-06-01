@@ -193,10 +193,11 @@ void attach()
 	std::thread(edb::init).detach();
 	std::thread(notifier::init).detach();
 
-	if (config::get().bootstrap_immediately)
+	int auto_bootstrap_delay_ms = config::get().auto_bootstrap_delay_ms;
+	if (auto_bootstrap_delay_ms > 0)
 	{
-		printf("bootstrap_immediately requested. We will sleep for 1 second and begin...\n");
-		std::this_thread::sleep_for(std::chrono::seconds(1));
+		printf("auto_bootstrap_delay_ms requested. We will sleep for %d ms and begin...\n", auto_bootstrap_delay_ms);
+		std::this_thread::sleep_for(std::chrono::milliseconds(auto_bootstrap_delay_ms));
 		bootstrap_carrot_juicer();
 	}
 	else 
